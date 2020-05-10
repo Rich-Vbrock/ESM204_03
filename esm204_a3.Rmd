@@ -1,0 +1,190 @@
+---
+title: "assignment_03"
+author: "Richard Viebrock"
+date: "5/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(tidyverse)
+library(ggplot2)
+library(wesanderson)
+library(janitor)
+library(broom)
+library(nlstools)
+
+```
+
+```{r}
+
+raw_data <- read_csv("Homework 3 Data.csv") %>% 
+  clean_names() %>% 
+  mutate(aggregate = q_low_gallons + q_high_gallons)
+```
+
+```{r}
+
+# Regression analysis
+
+lm_high <- lm(price_dollars ~ q_high_gallons, data = raw_data)
+lm_low <- lm(price_dollars ~ q_low_gallons, data = raw_data)
+lm_agg <- lm(price_dollars ~ aggregate, data = raw_data)
+
+```
+
+```{r}
+
+# Give names to the coefficients
+
+high_y <- lm_high$coefficients[1]
+high_m <- lm_high$coefficients[2]
+low_y <- lm_low$coefficients[1]
+low_m <- lm_low$coefficients[2]
+agg_y <- lm_agg$coefficients[1]
+agg_m <- lm_agg$coefficients[2]
+
+```
+
+```{r}
+
+# create demand functions p(q)
+
+dem_low_p <- function(q) {p = low_y + low_m*(q)}
+dem_high_p <- function(q) {p = high_y + high_m*(q)}
+dem_agg_p <- function(q) {p = agg_y + agg_m*(q)}
+               
+# Set equation = q to aggregate demand curve q(p)
+
+dem_low_q <- function(p) {q = (p-low_y)/low_m}
+dem_high_q <- function(p) {q = (p-high_y)/high_m}
+dem_agg_q <- function(p) {q = (p-agg_y)/agg_m}
+dem_agg_q_02 <- function(p) {q = (p-high_y)/high_m + (p-low_y)/low_m}
+z <- 0:600000
+
+```
+
+```{r}
+
+# Identify quantity demanded at price = $3.00. Then, calculate slope of supply curve (y = mx + b, where b = 0)
+sq_eq_price <- 3
+sq_eq_quant <- dem_agg_q(sq_eq_price)
+sup_m <- sq_eq_price/sq_eq_quant
+
+# Write function for supply
+supply <- function(q) {p = sup_m*(q)}
+
+```
+
+```{r}
+
+# Part c. Determine benefit to consumers & producers under the status quo (using algebra)
+
+# Consumer & producer surplus
+
+sq_conwel <- 0.5*sq_eq_quant*(agg_y-sq_eq_price)
+sq_prowel <- 0.5*sq_eq_price*sq_eq_quant
+
+```
+
+```{r}
+
+# Calculate environmental cost to country & world
+
+env_cost_w <- 0.5
+env_cost_l <- 1.5
+
+sq_env_w <- env_cost_w*sq_eq_quant
+sq_env_l <- env_cost_l*sq_eq_quant
+
+```
+
+```{r}
+
+# Question 2: Calculate the consumer welfare for low income and high income folks
+
+sq_low_quant <- dem_low_q(sq_eq_price)
+sq_high_quant <- dem_high_q(sq_eq_price)
+
+sq_conwel_low <- 0.5*sq_low_quant*(low_y-sq_eq_price)
+sq_conwel_high <- 0.5*sq_high_quant*(high_y-sq_eq_price)
+
+```
+
+```{r}
+
+# Question 3: Introduce a tax of $1.00/gallon
+
+tax_supply <- function(q) {p = 1 + sup_m*(q)}
+
+# Set agg demand = supply and Use Excel solver to identify the new equillibrium quantity because algebra is for the devil
+
+tax_01_quant <- 548449.42624834
+
+# Use agg demand curve & supply curve to calculate price of gas at eq_tax_quant
+
+tax_01_price <- dem_agg_p(tax_01_quant)
+
+```
+
+```{r}
+
+# Calculate welfare of producers and consumers under the new regime
+
+# Identify the quantity of units purchased by each category of buyers
+
+tax_01_high <- dem_high_q(tax_01_price)
+tax_01_low <- dem_low_q(tax_01_price)
+supply_0
+
+# Calculate Welfare
+
+tax_01_high_welfare <- 0.5*tax_01_high*(high_y-tax_01_price)
+tax_01_low_welfare <- 0.5*tax_01_low*(low_y-tax_01_price)
+tax_01_gas_welfare <- 0.5*(tax_01_price-1)*tax_01_quant
+tax_01_tax_rev <- tax_01_quant*1
+
+```
+
+```{r}
+
+# Calculate the local enviornmental damage
+
+tax_01_env_l <- env_cost_l*tax_01_quant
+tax_01_env_w <- env_cost_w*tax_01_quant
+
+```
+
+```{r}
+
+# Question 5 - 1/2 the demand funciton and use solver to solvit
+tesla_agg_p <- function(q) {p = 0.5*agg_y + agg_m*(q)}
+tesla_low_q <- function(p) {q = (p-(low_y*0.5))/low_m}
+tesla_high_q <- function(p) {q = (p-(high_y*0.5))/high_m}
+
+tesla_eq_quant <- 294002.646021168
+tesla_eq_price <- tesla_agg_p(tesla_eq_quant)
+tesla_eqq_high <- tesla_high_q(tesla_eq_price)
+tesla_eqq_low <- tesla_low_q(tesla_eq_price)
+
+```
+
+```{r}
+
+# Environmental Damage
+
+tesla_env_l <- env_cost_l*tesla_eq_quant
+tesla_env_w <- env_cost_w*tesla_eq_quant
+
+```
+
+```{r}
+
+# Question 6
+
+```
+
