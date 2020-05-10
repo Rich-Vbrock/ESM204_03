@@ -139,7 +139,6 @@ tax_01_price <- dem_agg_p(tax_01_quant)
 
 tax_01_high <- dem_high_q(tax_01_price)
 tax_01_low <- dem_low_q(tax_01_price)
-supply_0
 
 # Calculate Welfare
 
@@ -158,6 +157,88 @@ tax_01_env_l <- env_cost_l*tax_01_quant
 tax_01_env_w <- env_cost_w*tax_01_quant
 
 ```
+
+```{r}
+
+# Question 4
+
+# Percentage quantity consumed by income group
+
+sq_quant_total <- sum(sq_high_quant, sq_low_quant)
+sq_pct_high <- sq_high_quant/sq_quant_total
+sq_pct_low <- sq_low_quant/sq_quant_total
+
+# Aggregate quantity demanded under higher tax scenarios
+
+tax_02_quant <- 509604.076835597
+tax_03_quant <- 470404.233633869
+tax_04_quant <- 431203.880831047
+tax_05_quant <- 392003.136001794
+
+tax_02_price <- dem_agg_p(tax_02_quant)
+tax_03_price <- dem_agg_p(tax_03_quant)
+tax_04_price <- dem_agg_p(tax_04_quant)
+tax_05_price <- dem_agg_p(tax_05_quant)
+
+tax_02_rev <- 2*tax_02_quant
+tax_03_rev <- 3*tax_03_quant
+tax_04_rev <- 4*tax_04_quant
+tax_05_rev <- 5*tax_05_quant
+
+```
+
+```{r}
+
+# Welfare under tax_02
+
+tax_02_hq <- dem_high_q(tax_02_price)
+tax_02_hrev <- sq_pct_high*tax_02_rev
+tax_02_high <- (0.5)*(high_y-tax_02_price)*tax_02_hq + tax_02_hrev
+
+tax_02_lq <- dem_low_q(tax_02_price)
+tax_02_lrev <- sq_pct_low*tax_02_rev
+tax_02_low <- (0.5)*(low_y-tax_02_price)*tax_02_lq + tax_02_lrev
+
+tax_02_gas <- (0.5)*(tax_02_price-2)*tax_02_quant
+
+# welfare under tax_03
+
+tax_03_hq <- dem_high_q(tax_03_price)
+tax_03_hrev <- sq_pct_high*tax_03_rev
+tax_03_high <- (0.5)*(high_y-tax_03_price)*tax_03_hq + tax_03_hrev
+
+tax_03_lq <- dem_low_q(tax_03_price)
+tax_03_lrev <- sq_pct_low*tax_03_rev
+tax_03_low <- (0.5)*(low_y-tax_03_price)*tax_03_lq + tax_03_lrev
+
+tax_03_gas <- (0.5)*(tax_03_price-3)*tax_03_quant
+
+# Welfare under tax_04
+
+tax_04_hq <- dem_high_q(tax_04_price)
+tax_04_hrev <- sq_pct_high*tax_04_rev
+tax_04_high <- (0.5)*(high_y-tax_04_price)*tax_04_hq + tax_04_hrev
+
+tax_04_lq <- dem_low_q(tax_04_price)
+tax_04_lrev <- sq_pct_low*tax_04_rev
+tax_04_low <- (0.5)*(low_y-tax_04_price)*tax_04_lq + tax_04_lrev
+
+tax_04_gas <- (0.5)*(tax_04_price-4)*tax_04_quant
+
+# Welfare under tax_05
+
+tax_05_hq <- dem_high_q(tax_05_price)
+tax_05_hrev <- sq_pct_high*tax_05_rev
+tax_05_high <- (0.5)*(high_y-tax_05_price)*tax_05_hq + tax_05_hrev
+
+tax_05_lq <- dem_low_q(tax_05_price)
+tax_05_lrev <- sq_pct_low*tax_05_rev
+tax_05_low <- (0.5)*(low_y-tax_05_price)*tax_05_lq + tax_05_lrev
+
+tax_05_gas <- (0.5)*(tax_05_price-5)*tax_05_quant
+
+```
+
 
 ```{r}
 
